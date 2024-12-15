@@ -2,33 +2,45 @@
 
 // write code here
 
-let list = document.querySelectorAll('li');
+const list = document.querySelectorAll('li');
+const container = document.querySelector('ul');
 
-function sort(ls) {
-  list = [...ls].sort((a, b) => {
+container.innerHTML = '';
+
+const emplList = getEmployees(sortList(list));
+
+for (const i of emplList) {
+  const li = document.createElement('li');
+
+  li.setAttribute('data-position', i['data-position']);
+  li.setAttribute('data-salary', i['data-salary']);
+  li.setAttribute('data-age', i['data-age']);
+  li.innerText = i.name;
+  container.appendChild(li);
+}
+
+function sortList(ls) {
+  const sortedLst = [...ls].sort((a, b) => {
     const fS = parseFloat(a.getAttribute('data-salary').replace(/[$,]/g, ''));
     const sS = parseFloat(b.getAttribute('data-salary').replace(/[$,]/g, ''));
 
     return sS - fS;
   });
+
+  return sortedLst;
 }
 
 function getEmployees(ls) {
-  const container = document.createDocumentFragment();
+  const empl = [];
 
   for (let i = 0; i < ls.length; i++) {
-    const li = document.createElement('li');
-
-    li.setAttribute('data-position', ls[i].getAttribute('data-position'));
-    li.setAttribute('data-salary', ls[i].getAttribute('data-salary'));
-    li.setAttribute('data-age', ls[i].getAttribute('data-age'));
-    li.innerText = ls[i].innerText.trim();
-    container.appendChild(li);
+    empl[i] = {};
+    empl[i].id = i;
+    empl[i]['data-position'] = ls[i].getAttribute('data-position');
+    empl[i]['data-salary'] = ls[i].getAttribute('data-salary');
+    empl[i]['data-age'] = ls[i].getAttribute('data-age');
+    empl[i].name = ls[i].innerText.trim();
   }
 
-  return container;
+  return empl;
 }
-
-sort(list);
-document.querySelector('ul').innerHTML = '';
-document.querySelector('ul').appendChild(getEmployees(list));
